@@ -1,14 +1,14 @@
 import { Box, Paper, Typography } from '@mui/material';
-import { Task } from '../../utils/types';
+import { Task, UpdateTaskInput } from 'apps/frontend/src/generated/graphql';
 
 export const TaskCard: React.FC<{
-  name: string;
-  description: string;
+  title: string;
+  content: string;
   done: boolean;
   created_at: Date;
-  id: string;
-  onClick: (taksToBeUpdated: Task) => void;
-}> = ({ name, description, done, created_at, id, onClick }) => {
+  id: number;
+  onClick: (taksToBeUpdated: UpdateTaskInput) => void;
+}> = ({ title, content, done, created_at, id, onClick }) => {
   function formatTime(date: Date) {
     const hours = date.getHours();
     const minutes = date.getMinutes().toString().padStart(2, '0');
@@ -19,7 +19,12 @@ export const TaskCard: React.FC<{
   return (
     <Paper
       onClick={() => {
-        onClick({ name, description, done, id, created_at });
+        onClick({
+          title,
+          content,
+          done,
+          id,
+        });
       }}
       elevation={3}
       sx={{
@@ -28,8 +33,8 @@ export const TaskCard: React.FC<{
         ':hover': { cursor: 'pointer' },
       }}
     >
-      <Typography variant="h6">{name}</Typography>
-      <Typography variant="body1">{description}</Typography>
+      <Typography variant="h6">{title}</Typography>
+      <Typography variant="body1">{content}</Typography>
       <Typography variant="body2">
         <strong>Status:</strong> {done ? 'Done' : 'Not Done'}
       </Typography>

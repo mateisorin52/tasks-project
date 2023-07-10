@@ -4,15 +4,16 @@ import { Link } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { v4 as uuidv4 } from 'uuid';
 import { User } from '../utils/types';
+import { useCreateUserMutationMutation } from '../../generated/graphql';
 const Register = () => {
-  const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState<Omit<User, 'id'>>({
     fname: '',
     lname: '',
     email: '',
     password: '',
   });
-
+  const [createUserMutation, { data, loading, error }] =
+    useCreateUserMutationMutation();
   const [errors, setErrors] = useState<{
     fname?: string;
     lname?: string;
@@ -47,39 +48,26 @@ const Register = () => {
     if (Object.keys(errors).length > 0) {
       return;
     } else {
-      await simulateRegister();
+      handleCreateUser();
     }
   };
-  const simulateRegister = () => {
-    const { fname, lname, email, password } = formData;
-    return new Promise<void>((resolve, reject) => {
-      setIsLoading(true);
-      setTimeout(() => {
-        if (!localStorage.getItem('users')) {
-          localStorage.setItem(
-            'users',
-            JSON.stringify([{ id: uuidv4(), fname, lname, email, password }])
-          );
-        } else {
-          const currentUsers: User[] = JSON.parse(
-            localStorage.getItem('users')!
-          );
-          const updatedUsers: User[] = [
-            ...currentUsers,
-            { id: uuidv4(), fname, lname, email, password },
-          ];
-          if (currentUsers.find((item) => item.email === email)) {
-            setErrors({ email: 'Email address already exists.' });
-            setIsLoading(false);
-            return;
-          }
-          localStorage.setItem('users', JSON.stringify(updatedUsers));
-        }
-        setIsLoading(false);
-        resolve();
-      }, 2000);
-    });
+  const handleCreateUser = async () => {
+    try {
+      const result = await createUserMutation({
+        variables: {
+          CreateUserInput: {
+            ...formData,
+          },
+        },
+      });
+
+      window.location.pathname = 'login';
+    } catch (error) {
+      // Handle any errors that occurred during the mutation
+      setErrors({ password: 'An error occured while processing the request!' });
+    }
   };
+
   const isValidEmail = (email: string) => {
     // Basic email format validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -136,7 +124,7 @@ const Register = () => {
       />
       <Box textAlign="center" mt={2}>
         <LoadingButton
-          loading={isLoading}
+          loading={loading}
           variant="contained"
           color="primary"
           onClick={handleSubmit}

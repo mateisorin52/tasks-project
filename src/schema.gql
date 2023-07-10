@@ -1,0 +1,51 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Task {
+  """Example field (placeholder)"""
+  id: Int!
+
+  """Example field (placeholder)"""
+  title: String!
+
+  """Example field (placeholder)"""
+  content: String!
+
+  """Example field (placeholder)"""
+  done: Int!
+}
+
+type Query {
+  TasksQuery: [Task!]!
+  TaskQuery(id: Int!): Task!
+}
+
+type Mutation {
+  CreateTaskMutation(createTaskInput: CreateTaskInput!): Task!
+  UpdateTaskMutation(updateTaskInput: UpdateTaskInput!): Task!
+  RemoveTaskMutation(id: Int!): Task!
+}
+
+input CreateTaskInput {
+  """Example field (placeholder)"""
+  title: String!
+
+  """Example field (placeholder)"""
+  content: String!
+
+  """Example field (placeholder)"""
+  done: String!
+}
+
+input UpdateTaskInput {
+  """Example field (placeholder)"""
+  title: String!
+
+  """Example field (placeholder)"""
+  content: String!
+
+  """Example field (placeholder)"""
+  done: String!
+  id: Int!
+}

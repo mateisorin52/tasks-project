@@ -1,0 +1,9 @@
+mutation UpdateTaskMutation($updateTaskInput: UpdateTaskInput!) {
+  UpdateTaskMutation(updateTaskInput: $updateTaskInput) {
+    id
+    title
+    content
+    done
+    created_at
+  }
+}

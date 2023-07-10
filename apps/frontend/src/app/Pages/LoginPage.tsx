@@ -3,6 +3,7 @@ import { TextField, Button, Box, Paper } from '@mui/material';
 import { Link, useNavigate } from 'react-router-dom';
 import { LoadingButton } from '@mui/lab';
 import { User } from '../utils/types';
+import axios from 'axios';
 const LoginPage = () => {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -24,7 +25,10 @@ const LoginPage = () => {
   useEffect(() => {
     if (localStorage.getItem('token')) navigate('/home');
   }, []);
-  const handleSubmit = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+  const handleSubmit = async (
+    e: React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    setIsLoading(true);
     e.preventDefault();
     const { email, password } = formData;
     if (!email) {
@@ -33,40 +37,18 @@ const LoginPage = () => {
       setErrors({ password: 'Password is required' });
     } else {
       setErrors({});
-      simulateLogin(email, password)
-        .then(() => {
-          setIsLoading(false);
-          localStorage.setItem('token', 'access_token');
-          navigate('/home');
-        })
-        .catch((error) => {
-          setIsLoading(false);
-          setErrors({ password: 'Invalid email or password.' });
-          console.log('Login failed:', error);
-        });
-    }
-  };
 
-  const simulateLogin = (email: string, password: string) => {
-    return new Promise<void>((resolve, reject) => {
-      setIsLoading(true);
-      setTimeout(() => {
-        const users = localStorage.getItem('users');
-        let targetUser: User | undefined;
-        if (users) {
-          const usersArray: User[] = JSON.parse(users);
-          console.log(usersArray);
-          targetUser = usersArray.find((item) => {
-            return item.email === email && item.password === password;
-          });
-        }
-        if (targetUser) {
-          resolve();
-        } else {
-          reject(new Error('Invalid email or password'));
-        }
-      }, 2000);
-    });
+      const res = await axios.post('http://localhost:3010/api/auth/login', {
+        email,
+        password,
+      });
+
+      if (res.data.access_token) {
+        localStorage.setItem('token', res.data.access_token);
+        window.location.pathname = 'home';
+      } else setErrors({ password: 'Email or password wrong' });
+    }
+    setIsLoading(false);
   };
 
   return (

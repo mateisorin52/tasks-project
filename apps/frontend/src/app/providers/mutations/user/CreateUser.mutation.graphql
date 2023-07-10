@@ -1,0 +1,9 @@
+mutation CreateUserMutation($CreateUserInput: CreateUserInput!) {
+  createUserMutation(createUserInput: $CreateUserInput) {
+    id
+    fname
+    lname
+    email
+    password
+  }
+}

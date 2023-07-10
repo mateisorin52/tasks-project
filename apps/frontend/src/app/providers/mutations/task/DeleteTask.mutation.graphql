@@ -1,0 +1,9 @@
+mutation RemoveTaskMutation($id: Int!) {
+  RemoveTaskMutation(id: $id) {
+    id
+    title
+    content
+    done
+    created_at
+  }
+}

@@ -1,0 +1,9 @@
+query TasksQuery($filters: TaskFilters) {
+  TasksQuery(filters: $filters) {
+    id
+    title
+    content
+    done
+    created_at
+  }
+}
