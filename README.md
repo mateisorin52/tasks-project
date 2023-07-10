@@ -13,5 +13,7 @@ while in task-project directory run:
 
 In order to start the apps run while in task-project directory run:
 - npm install
-- npx nx serve api
 - npx nx serve frontend
+- npx nx build api (the dev server for the api is now faulty because of an nx update so the app needs to be built)
+- cd dist/apps/api
+- node main.js
